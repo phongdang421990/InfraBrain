@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./99-Secrets/**)",
+      "Read(./**/*.kdbx)",
+      "Read(./**/.env)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)"
+    ]
+  }
+}
