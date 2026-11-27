@@ -25,16 +25,21 @@ File này được Claude Code đọc mỗi khi mở trong vault. Nó là "hiế
 Khi được hỏi về một hệ thống: tìm trong vault trước (Grep/Glob theo hostname, IP, tên khách hàng). Nếu vault không có hoặc mâu thuẫn → nói rõ, KHÔNG đoán.
 
 ## 3. Đội agent (`.claude/agents/`)
-| Agent | Dùng khi |
-|---|---|
-| `infra-sentinel` | Health check vCenter/ESXi/SAN/FortiGate/cert, xác minh inventory |
-| `rca-tracer` | Sự cố production, phân tích log, dựng timeline, viết RCA |
-| `net-warden` | Review config FortiGate/Cisco/MikroTik, truy vết luồng, firewall rule |
-| `cc-echo` | Cisco PCCE/CUCM/CVP/Finesse/CUIC, Avaya, UCRM, call flow |
-| `si-architect` | Thiết kế HA/DR, sizing, migration, proposal cho khách hàng/SI |
-| `doc-scribe` | Biến tài liệu thô thành note, CMDB, topology, runbook, script tự động |
+| Agent | Dùng khi | Skill chính |
+|---|---|---|
+| `infra-sentinel` | Health check vCenter/ESXi/SAN/FortiGate/cert, xác minh inventory, capacity | `vsphere-health-check` |
+| `rca-tracer` | Sự cố production, phân tích log, dựng timeline, viết RCA | `incident-rca` |
+| `net-warden` | Firewall/switch/router config, luồng kết nối, network rule request, VPN, credential/security | `fortigate-config-review` |
+| `cc-echo` | Cisco PCCE/CUCM/CVP/Finesse/CUIC, Avaya, SIP trunk/CUBE, call flow | `pcce-troubleshooting` |
+| `app-ops` | Deploy/upgrade ứng dụng Linux: AICC, UCRM, Connect247, web portal, .NET; systemd, Nginx, GitLab CI | `app-release` |
+| `db-keeper` | PostgreSQL/SQL Server: migration, index, owner, HA Patroni/Percona, backup và restore | `postgres-ops` |
+| `si-architect` | Thiết kế HA/DR, sizing, phương án kỹ thuật, proposal cho khách hàng/SI | — |
+| `pm-planner` | Roadmap, kế hoạch theo pha, họp liên team, báo cáo quản lý, tuyển dụng | — |
+| `doc-scribe` | Nạp tài liệu, CMDB, topology, runbook, script, thống kê/review | `vault-ingest` |
 
+Mọi thay đổi cấu hình: thêm skill `change-request` (bắt buộc).
 Việc lớn chạm nhiều tầng → bạn (agent chính) chia việc cho nhiều agent chạy song song rồi tổng hợp và tự kiểm tra chéo kết quả.
+Phạm vi vault: **chỉ BaseBS**. Công việc DongJin (DJS) dùng vault riêng `DJBrain`.
 
 ## 4. Quy tắc an toàn — BẮT BUỘC, không ngoại lệ
 1. **Mặc định read-only.** Chỉ chạy lệnh đọc (get/show/display/list/export). Mọi lệnh thay đổi cấu hình là "change".

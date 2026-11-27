@@ -9,6 +9,8 @@ $dst  = Join-Path $root '.claude'
 if (-not (Test-Path $src)) { Write-Error "Khong tim thay $src"; exit 1 }
 New-Item -ItemType Directory -Force -Path $dst | Out-Null
 Copy-Item -Path (Join-Path $src '*') -Destination $dst -Recurse -Force
+# Don file kiem tra do Claude lo tao (2026-11-27)
+Remove-Item (Join-Path $dst 'agents\_writetest') -ErrorAction SilentlyContinue
 Write-Host "Da cai vao $dst :" -ForegroundColor Green
 Get-ChildItem $dst -Recurse -File | ForEach-Object { '  ' + $_.FullName.Substring($dst.Length + 1) }
 Write-Host ""
