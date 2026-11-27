@@ -1,7 +1,7 @@
 ---
 type: site
 status: unverified
-updated: 2026-11-24
+updated: 2026-11-25
 tags: [site, fpt, hcm, basebs, smb, lab]
 ---
 # FSG02 — FPT Tân Thuận DC7-C12 (SMB Production + LAB)
@@ -48,6 +48,7 @@ Thuộc [[FDC-FPT]]. Báo cáo tổng: [[BaseBS-Infra-Master-Overview]] §3.3. I
 ## SG03
 - SG03 "Basebs Cloud" (10.148.x, PDC 10.148.120.20) publish qua loopback trên RNET-02 dùng WAN2 của SMB.
 - Vị trí vật lý chưa rõ. Nhiều khả năng dùng chung edge FSG02 [SL].
+- **25/11 (live):** VM SG03 chạy trên SG02 Cluster01 ở [[FSG01]] (vcsa.sg02basebs.com). Phần public vẫn đi qua WAN2 của SMB [SL].
 
 ## Rủi ro
 - ESXi 6.5, FortiOS 5.6.6 EOL.
@@ -57,5 +58,16 @@ Thuộc [[FDC-FPT]]. Báo cáo tổng: [[BaseBS-Infra-Master-Overview]] §3.3. I
 
 ## Cần xác minh
 - Số FG và RNET thực tế; IP mgmt của từng FG (K15).
-- vCenter .110.10 có phải là vCenter không; host .23 / .24 (K14, K16).
-- SG03 đặt ở đâu.
+- ~~vCenter .110.10 có phải là vCenter không; host .23 / .24 (K14, K16).~~ **Đã giải 25/11:** .110.10 là vCenter; Cluster-01 chỉ có .21 / .22 / .25.
+- ~~SG03 đặt ở đâu.~~ Compute ở SG02 Cluster01 ([[FSG01]]); edge public vẫn cần xác minh.
+
+## Live vSphere 2026-11-25
+Nguồn: [[2026-11-25-vsphere-health-FSG-FHN]] (vSphere Client UI, read-only).
+- **vCenter SMB 10.189.110.10** (vcsa.smbbasebs.com, 6.5.0 b15259038). Datacenter "SMB", Cluster-01.
+  - **Chỉ 3 host:** .21 / .22 (R740, 2× Gold 6252, 256 GB, ESXi 6.5.0 b13635690) và .25 (R650xs, 2× Silver 4314, 384 GB, 6.5.0 b19092475).
+  - 109 VM (84 bật / 25 tắt).
+- **HA ON nhưng Host failure response = Disabled** (host chết thì VM không restart). DRS OFF, EVC Disabled. **RAM 86%** (84 / 86 / 88%), không đạt N+1.
+- **NTP hỏng cả 3 host:** .25 ≈ +8 giờ 01 phút; .21 ≈ −4 giờ 13 phút; .22 ≈ −2 giờ 24 phút.
+- Datastore (VMFS5): BASE_Customer_LUN01 81.5% (Warning từ 21/07/2026), BASE_Backup_LUN01 61%, BASE_Infra_LUN01 55%.
+- VM tắt đáng chú ý: BASE_Infra_Wazuh, SELKs, LogSvr; CN247_ExpressC_SUB / ExpressE_SUB; PROD_ReverseProxy01; PROD_UnifyCRM_App03.
+- **LAB 172.23.90.10:** chưa rà (cần đăng nhập SSO `vcsa.labbasebs.com`).

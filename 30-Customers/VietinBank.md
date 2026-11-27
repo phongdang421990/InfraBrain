@@ -1,7 +1,7 @@
 ---
 type: customer
 status: unverified
-updated: 2026-11-24
+updated: 2026-11-26
 tags: [customer, bank]
 ---
 # VietinBank (VTB)
@@ -29,8 +29,10 @@ tags: [customer, bank]
 | Cloud | Migration PCCE3 lên FPT Cloud (KVM) **đã dừng**; giữ on-premise | [2N] x23 + NOTES |
 
 ## Lưu ý
+- Quy mô VTB tại [[FHN01]] (live 26/11): 159 VM (96 PROD + 21 PCCE3 + 42 UAT), khoảng 58 TB, khoảng 1,38 TB RAM; riêng ghi âm Calabrio DFS01 / 02 là 31,5 TiB (ổ `E:` 92–94%). Dùng làm số đầu vào khi tính sức chứa PVB.
 - **VietinBank ≠ [[VietBank]]** (VietBank là tenant tại [[VDC-VNPT]]).
-- **IP DB CRM v4 mâu thuẫn:** bảng trên (x18) ghi DB 172.31.90.51–53; Checkmk ghi PG02 = 172.31.90.32 (2026-11-24). Cần xác minh: 2 cụm khác nhau hay đổi IP. Xem [[open-questions]] #19.
+- ~~IP DB CRM v4 mâu thuẫn~~ **Đã giải (live 24–25/11):** cụm v4 là 172.31.90.31 / .32 / .33. Dải .51–.55 là cụm uCRM cũ (DB02 .52 tắt, DB05 .55 bật). Xem [[_VTB-CRMv4-DB]], [[open-questions]] #19.
+- **PCCE3 (live 25/11):** host 10.179.110.45 / .47 tắt dịch vụ NTP, đồng hồ chậm ≈ 25 / 19 phút → [[risk-register]] R-014. Xử lý qua `change-request`, phối hợp `cc-echo`. Chi tiết: [[2026-11-25-vsphere-health-FSG-FHN]].
 - "MetroNet PVB ↔ Duy Tân" (mục chủ đề): chưa có cấu hình nào chứng minh. BaseBS trả lời FPT rằng giữa các DC "chỉ có VPN site-to-site" [x21]. Cần làm rõ: đây là thiết kế mới hay đường có sẵn?
 
 ## SLA / liên hệ

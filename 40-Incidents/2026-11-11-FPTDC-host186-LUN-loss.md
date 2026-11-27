@@ -6,7 +6,7 @@ start: 2026-11-11 17:16
 end: 2026-11-12 00:12 (5 CTI bật lại; thời điểm dịch vụ phục hồi hoàn toàn chưa xác nhận)
 customer: [VIKKI, NCB]
 systems: [ESXi 10.0.3.186, ESXi 10.0.3.188, ESXi 10.0.3.178, VNXe3200 10.0.4.12, Unity380XT 10.0.4.10, vCenter 10.0.3.50]
-updated: 2026-11-24
+updated: 2026-11-25
 tags: [incident, vmware, storage, fptdc]
 ---
 # 2026-11-11 — FPTDC: mất truy cập LUN, host 10.0.3.186 Not Responding, 5 CTI VM tắt
@@ -86,3 +86,21 @@ Mọi thao tác thay đổi (clear SEL, đổi multipath, reboot) phải đi qua
 ## Bằng chứng
 - x01 (sheet 01 Timeline, 02 RCA, 05 Action Plan, 07 Asset Map); nguồn gốc là vobd.log, hostd.6.gz, vmksummary.log, FDC_ESXi_186_11Nov.csv, FDC_CTI_Events_11-13Nov.csv.
 - Nên chép support bundle vào `90-Raw/incidents/2026-11-11-FPTDC/`, không commit.
+
+## Bổ sung 2026-11-25 (live vSphere, [[2026-11-25-vsphere-health-FSG-FHN]])
+- **Phạm vi rộng hơn hồ sơ: host SG02 10.138.110.22 (vCenter khác, cùng site FSG01) cũng khởi động lại trong đêm.**
+  - Uptime 13 ngày; Hardware Health ghi lần cập nhật sensor cuối 12/11 03:04:53.
+  - Event "system clock stepped … lost synchronization" lúc 12:42:52 ngày 12/11 → trước đó giờ của host đã sai.
+  - VM `Infra_VCSA_10.138.110.10` (chính vCenter SG02) chạy trên .22, có event "Virtual machine is starting" lúc **09:51:34 ngày 12/11** (theo đồng hồ host). Cluster SG02 tắt HA.
+  - [SL] vCenter SG02 và các VM trên .22 nằm tắt từ khoảng 03:00 tới khoảng 09:51.
+  - Thời điểm khoảng 03:04 trùng cuối cửa sổ vmnic của .186 lên xuống (01:53–03:05) → nghi có thao tác vật lý / mạng trong DC4 đêm đó.
+- **Đồng hồ host lệch:** .178 ≈ +7 phút, .188 ≈ −8 phút (NTP tắt; số đo ngày 25/11). Khi dùng log cục bộ (`vobd`, `vmkernel`, `hostd`) của 2 host này phải hiệu chỉnh. .186 chạy NTP (lệch ≈ 20 s). Timestamp event của vCenter không bị ảnh hưởng.
+- **Hiện trạng 25/11:**
+  - .186 vẫn ESXi 5.5.0 b2068190, uptime 13 ngày.
+  - Cả 3 cluster FPTDC tắt HA / DRS.
+  - VNXe2_BE_07 88%, BE_04 85%.
+  - Unity_DAE01_Backup02 được mount ở cả FPTDC và SG02.
+- Việc cần thêm:
+  - Thu log SG02 .22 quanh 12/11 00:00–10:00.
+  - Hỏi DC FPT về thao tác trong rack DC4 đêm 12/11.
+  - Ghi thời gian downtime của vCenter SG02 và các dịch vụ SG02 / SG03 vào phần Ảnh hưởng.

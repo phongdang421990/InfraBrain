@@ -1,7 +1,7 @@
 ---
 type: site
 status: unverified
-updated: 2026-11-24
+updated: 2026-11-25
 tags: [site, fpt, hcm, basebs]
 ---
 # FSG01 — FPT Tân Thuận DC4 (HCM)
@@ -40,7 +40,7 @@ Thuộc [[FDC-FPT]]. Báo cáo tổng: [[BaseBS-Infra-Master-Overview]] §3.2. I
 | 10.0.3.186 (esx21) | UCS C240 M4S | 5.5 | BACKEND | 53 |
 | 10.0.3.188 | R650xs | 6.5 | BACKEND | 38 |
 | 10.0.3.178 | R650xs | 6.5 | DMZ | 55 |
-| 10.138.110.21 / .22 / .23 | R660xs ×2, R650xs | 7.0.3 | SG02 Cluster01 / vcsa.sg02basebs.com 10.138.110.10 | ? |
+| 10.138.110.21 / .22 / .23 | R660xs ×2, R650xs | 7.0.3 | SG02 Cluster01 / vcsa.sg02basebs.com 10.138.110.10 | 32 / 37 / 30 (live 25/11) |
 
 Nguồn: [2N] x01 (PowerCLI live) + x11. Host .186/.188 đặt ở rack DC4-C6 [1N BG].
 
@@ -74,3 +74,23 @@ Nguồn: [2N] x01 (PowerCLI live) + x11. Host .186/.188 đặt ở rack DC4-C6 [
 - Router 877 dùng PPPoE VNPT hay FPT? Public IP của FSG01 là gì? (chưa có bảng Domain cho FSG01)
 - Rack C6 có "VNPT-CORE-SW-01/02" và "LIGHTSMART": đây là thiết bị carrier hay của BaseBS?
 - Ai đã đổi uplink vSwitch trên host .186? (K27)
+
+## Live vSphere 2026-11-25
+Nguồn: [[2026-11-25-vsphere-health-FSG-FHN]] (vSphere Client UI, read-only).
+
+**vCenter FPTDC 10.0.3.50**
+- 6.5.0 b5973321 (bản 2017), SSO domain `VCenterBASE`. 5 host, 164 VM (111 bật / 53 tắt), 23 datastore.
+- 3 cluster BACKEND / DMZ / PCCE1 đều **HA OFF, DRS OFF**. Cụm DMZ chỉ có **1 host (.178, 55 VM)**.
+- ESXi: .139.2 / .139.3 **5.5.0 b1746018** (uptime 3,668 / 3,190 ngày); .186 **5.5.0 b2068190**; .178 / .188 6.5.0 b19092475.
+- NTP: .178 / .188 tắt NTP, lệch ≈ +7 / −8 phút. .186 và PCCE1 chạy NTP (10.0.3.47, 10.0.3.39).
+- Alarm:
+  - VNXe2_BE_07 88% và BE_04 85% (Critical).
+  - .139.2 **Network uplink redundancy lost** từ 26/08/2026, đã bị ack 12/11.
+  - "Expired vCenter Server license" từ 2018 (đã ack).
+- Không có datastore nào của VNXe3200 #1. Datastore **Unity_DAE01_Backup02 dùng chung với vCenter SG02**.
+
+**vCenter SG02 10.138.110.10**
+- 7.0.3 b22837322. Cluster01: 3 host ESXi 7.0.3 b24411414, 99 VM. **HA OFF, DRS OFF, EVC Disabled**. RAM 65%. NTP OK.
+- **SG03 (10.148.x) chạy trên Cluster01 này** (AD / PKI SG03, PROD Cn247, CUCM, Expressway, Calabrio, Recording). Cùng cluster còn có chính VM vCenter (`Infra_VCSA`, đang ở .22), HDSS (HDS_*), BASE_Ketoan, Guacamole.
+- .22 reboot đêm 12/11 (uptime 13 ngày), vCenter SG02 bật lại khoảng 09:51 → xem [[2026-11-11-FPTDC-host186-LUN-loss]].
+- Datastore: Unity_DAE01_Backup02 25 TB (53%), Unity_DAE01_Backup03 17 TB (49%), cùng 3 local.

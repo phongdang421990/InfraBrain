@@ -1,7 +1,7 @@
 ---
 type: site
 status: unverified
-updated: 2026-11-24
+updated: 2026-11-26
 tags: [site, fpt, hanoi, basebs, pcce3]
 ---
 # FHN01 — FPT Duy Tân, Hà Nội (rack CG3-i5)
@@ -96,3 +96,60 @@ Nguồn: `show ip interface brief`, `show vlan brief`, `show running-config | in
 - `mgmt` 10.179.249.90; `wan1` 10.179.10.110; MGT (VLAN 110) 10.179.110.1; FW-External (VLAN 20) 10.179.20.123; loopback A-CCX 10.179.11.101/.102.
 - VLAN BaseBS (VLAN = octet 3): 70 DMZ, 80 Backup, 90 Database, 110 MGT, 120 SYS, 182 A.CCX, 184 DMZ-Ext, 185 UnifyCRM, 186 CN247, 187 IC, 188 LCM → gateway 10.179.X.1.
 - **VLAN VietinBank (VLAN = 200 + octet 3, gateway 172.31.X.1)**: 245 PCCE3-UAT, 250 PCCE-Pri, 251 PCCE-Pub, 252 PCCE3-Pri, 253 PCCE3-Pub, 270 PCCE3-VoiceGW, 280 Interact, 281 IBox, 282 PCCE3-APP (172.31.182), 283 NAT, 284 Ext (172.31.184), **285 PCCE3-uCRM (172.31.185)**, 286 CDP, 288 LCM, 289 WFM, **290 PCCE3-DB (172.31.90)**.
+
+## vSphere live bổ sung (2026-11-25)
+Nguồn: [[2026-11-25-vsphere-health-FSG-FHN]].
+- ESXi build:
+  - .21 6.5.0 b20502893 (R660xs, Gold 6442Y).
+  - .22 / .23 (R640) và .24 / .25 (R650xs): 6.5.0 b17477841.
+  - .26 (R640): 6.5.0 b19092475.
+  - .45 / .47 / .53: 6.5.0 b8294253.
+  - A-App trộn 3 đời CPU, 3 build, EVC tắt.
+- **NTP:**
+  - .22 Stopped và trỏ nhầm **10.189.120.20** (NTP của SMB) → ≈ +7 giờ 58 phút.
+  - **.45 / .47 (PCCE3 VietinBank) Stopped → ≈ −25 / −19 phút.**
+  - .53 Disabled → ≈ −1 giờ.
+  - .21 / .23 / .24 / .25 / .26 OK (10.179.120.20).
+- VM: 201 (192 bật / 9 tắt).
+  - VTB uCRM v4 DB = 172.31.90.31–.33 (bật), MidDB .90.34 tắt.
+  - uCRM cũ: DB02 .90.52 tắt, DB05 .90.55 bật.
+  - uCRM v5 Std: App01 .185.80 và DB01 .90.101 bật.
+- Triggered alarms vẫn là 3: Cust_SVR.01, Cust_SAN.BK, quạt .47 (ack 13/06/2025).
+
+## Storage & phần cứng live (vCenter, Unisphere, iDRAC — 2026-11-25/26)
+Nguồn: vCenter (data service + datastore browser, chỉ đọc), Unisphere REST (GET), iDRAC Redfish (GET); chủ vault tự đăng nhập. Kế hoạch xử lý: [Kế hoạch tối ưu storage FHN01](https://claude.ai/artifact/WLNbuaoMhh8jx6nmTyVtk9).
+
+### Datastore dùng chung (VMFS 5, LUN thin trên Unity300)
+| Datastore | Dung lượng | Đã dùng | Pool | Ghi chú |
+|---|---|---|---|---|
+| Cust_SVR.01 | 15.360 GiB | 13.147 GiB (85,6%) | FDCHN_POOL.01 | 58 VM; swap 582 GiB; file không thuộc VM nào 218 GiB |
+| Cust_SAN.BK | 50.720 GiB | 46.223 GiB (91,1%) | FDCHN_POOL.NLSAS | 84 VM, **có production** (không chỉ backup); swap 634 GiB; Calabrio DFS01/02 2 × 15.746 GiB thick; file không thuộc VM nào 1.222 GiB |
+| Infra_SVR.01 | 3.072 GiB | 1.516 GiB (49,4%) | FDCHN_POOL.01 | 11 VM; khoảng 284 GiB template / ISO không đăng ký |
+
+### Unity300 (CKM00184201856, 10.179.110.9)
+- Health OK; 40 đĩa đều OK; có đĩa chưa bind dùng làm spare (1 NL-SAS 5,5 TB, vài SAS 1,5–1,65 TB, SSD 367 GB).
+- FDCHN_POOL.01 (SAS, RAID10): 18,69 TiB, trống 4,60 TiB, subscribed 98%. FDCHN_POOL.NLSAS (NL-SAS, RAID10): 53,66 TiB, trống 9,17 TiB, subscribed 95%. Không over-subscribe, nên rủi ro thật nằm ở % datastore.
+- File system: Sys_VTB_NFS 750 GiB (48%; alert "filling up" ngày 23/11), Sys_VTB_SMB 300 GiB (30%), Sys_Lotte_SMB 100, Sys_TPB_NFS / SMB 50 / 50, Sys_BackupCisco 30, SFTP_RCD_HDSS 30.
+
+### Host A-App (.21–.26)
+| Host | Model / Service tag | iDRAC | RAM dùng / tổng (GB) | RAID local | Ghi chú |
+|---|---|---|---|---|---|
+| .21 | R660xs / FWD7B74 | .121 | 279 / 383 | H755, SSD 447 GiB | **iDRAC web treo 26/11**; cảm biến ổ đĩa và pin RAID trên vCenter vẫn xanh |
+| .22 | R640 / CT8HJF3 | .122 | 182 / 256 | H730P, RAID5 3 × SSD 480 GB | vCenter hiển thị HDD vì SSD nằm sau RAID |
+| .23 | R640 / GRLWJF3 | **.158** | 269 / 383 | H730P, RAID5 3 × SSD 480 GB | iDRAC là .158, không phải .123 |
+| .24 | R650xs / CP9V1S3 | .124 | 240 / 383 | H755, RAID1 2 × SSD 480 GB | |
+| .25 | R650xs / D69DKT3 | .125 | 284 / 383 | H755, RAID5 4 × **HDD** 2,4 TB | Chứa 31 VM UAT trên SvrApp.05 |
+| .26 | R640 / 10TYRN3 | .126 | 266 / 383 | H750, RAID1 2 × SSD 480 GB | vmnic2–5 down |
+- iDRAC Redfish 26/11: controller, VD, PD đều OK; SSD còn 97–100% tuổi thọ; không PD nào báo predicted failure.
+- Mạng: mỗi host 4 × 1 GbE. vSwitch0 (2 uplink) chứa vmk0 dùng chung Management + vMotion (MTU 1500, không có vmk vMotion riêng).
+- Multipath: mỗi host thấy 3 LUN × 4 path (2 active / 2 standby, VMW_PSP_RR), không path chết.
+- Cluster: HA off, DRS off, swap placement = vmDirectory; 183 VM để inherit; 26/11 không VM nào swap / balloon.
+
+### Phát hiện cần xử lý (chi tiết trong kế hoạch)
+- Ổ đĩa trong VM đầy: VTB_Centrallog `/` 100%, VTB_Percona `/` 100%, UAT_App_Record `C:` 100%; VTB_Calabrio_DFS01 / 02 `E:` 94% / 92%; LOTTE_Calabrio `F:` 93%; PCCE3-ROGGER-A `E:` 90%; VTB_RemoteAccessDB `C:` 90%; HN01-UCCX01 `/` 90%; VTB_Calabrio_DB01 / 02 `E:` 88–89%.
+- VM đang tắt: VTB_MID_App01 / 02 (2 × 200 GiB, Cust_SVR.01), VTB_uCRMv4_MidDB (300 GiB, Cust_SAN.BK), VTB_uCRM_DB02 .90.52 (400 GiB, Infra), UAT_CRM_DB02 / DB03 / Search (SvrApp.05), debian-12.8v1, Oracle-8.10_update_9_2025.
+- Disk rời không gắn VM nào: `[Cust_SVR.01] VTB_Calabrio_DB02_172.31.253.92/VTB_Calabrio_DB02_172.31.253.92_2.vmdk` 200 GiB (08/2023).
+- `[Cust_SAN.BK] A-CCX02/Local01, Local02`: bản copy VM UC của host A-CCX02 cũ (CUCM, Unity Connection, UCCX, Prime, IM&P, OVA / ISO), 1.146 GiB, chép ngày 2025-12-02.
+- Snapshot "Before Upgrade" ngày 2021-10-29 trên HN01-CUCMPUB / CUCMSUB01 (133 GiB, A-CCX.01-Local.01).
+- **Bẫy khi dọn:** VTB_uCRMv5_DB01 nằm trong folder `VTB_uCRMv5_App02_172.31.185.81` (VM clone rồi đổi tên). LOTTE_Calabrio nằm trong folder `DEV_Calabrio_10.179.90.33`. Không xóa folder theo tên.
+- Quy mô VTB tại FHN01: 159 VM (96 PROD + 21 PCCE3 + 42 UAT), khoảng 58 TB, khoảng 1,38 TB RAM (UAT: 5 TB / 264 GB). CN247 23 VM 1,9 TB / 186 GB; Lotte 5 VM 3,4 TB; BASE 5 VM 1,9 TB; HN01 UC 5 VM 1,0 TB.

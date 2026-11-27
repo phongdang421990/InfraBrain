@@ -1,7 +1,7 @@
 ---
 type: report
 status: review
-updated: 2026-11-24
+updated: 2026-11-26
 tags: [report, basebs, ip-plan, cmdb, appendix]
 ---
 # Phụ lục IP — BaseBS Infra Master Overview
@@ -133,7 +133,7 @@ Không có username hay mật khẩu nào trong phụ lục này.
 | 10.179.110.10 | vCenter | M | [1N] |
 | 10.179.110.20 | IntSW stack | M | [2N] |
 | 10.179.110.21 – .26 | ESXi A-App | M | [2N] |
-| 10.179.110.121 / .122 / .124 / .125 / .126 / .158 | BMC A-App | B | [1N] |
+| 10.179.110.121 (.21) / .122 (.22) / .158 (.23) / .124 (.24) / .125 (.25) / .126 (.26) | iDRAC9 A-App (xác minh Redfish 2026-11-26; .121 web treo) | B | [Live] |
 | 10.179.110.45 / .47 | ESXi PCCE3-A / B | M | [2N] |
 | 10.179.110.46 / .48 | CIMC PCCE3-A / B | B | [1N] |
 | 10.179.110.53 | ESXi A-CCX | M | [2N] |

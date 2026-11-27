@@ -1,7 +1,7 @@
 ---
 type: site
 status: unverified
-updated: 2026-11-24
+updated: 2026-11-25
 tags: [site, moc, fpt]
 ---
 # FDC / FPT (MOC)
@@ -24,6 +24,7 @@ Nguồn bảng mã site: [2N] x11 StorageLogin (mã site ↔ dải IP) + x05 + b
 - Kết nối DC↔DC: **chỉ có IPsec site-to-site** qua Internet, hub tại RNET-01 [[VDC-VNPT]] [2N x06 + x21].
 - Firewall: FortiGate 201E (FortiOS 5.6.6) và PA-3020 (PAN-OS 7.0), **đã hết subscription** [2N x21 + x23].
 - Thiết bị đã hết bảo hành hãng; BaseBS có kho đĩa dự phòng [1N x23].
+- Health check vSphere live 25/11 cho cả 4 DC: [[2026-11-25-vsphere-health-FSG-FHN]]. Điểm chung: HA tắt hoặc không có tác dụng ở SG02 / FPTDC / SMB / FHN01, NTP lệch ở 9/23 host, ESXi 5.5 / 6.5 / 7.0 đều đã hết hỗ trợ.
 
 ## Sự cố liên quan
 - [[2026-11-11-FPTDC-host186-LUN-loss]] (FSG01)

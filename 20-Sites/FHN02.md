@@ -1,7 +1,7 @@
 ---
 type: site
 status: unverified
-updated: 2026-11-24
+updated: 2026-11-25
 tags: [site, fpt, hanoi, basebs, hdss]
 ---
 # FHN02 — FPT Phạm Văn Bạch, Hà Nội (rack L06-M3)
@@ -81,3 +81,10 @@ Thuộc [[FDC-FPT]]. Báo cáo tổng: [[BaseBS-Infra-Master-Overview]] §3.5. I
 ### Kênh transit Metro Duy Tân ↔ PVB (đề xuất, chưa triển khai)
 - **10.179.254.0/30** (dải mới, đã kiểm tra chưa dùng trên 2 ExtSW và 2 FortiGate ngày 24/11): FHN1.ExtSW Gi1/0/20 **.1** ↔ FHN2.ExtSW Gi1/0/21 **.2** (routed port; hoặc Gi1/1/1 nếu FPT giao quang BX, đầu FPT cần BX10-D). Không dùng lại 10.179.255.4/30.
 - Chi tiết route + policy: Sheet https://claude.ai/artifact/EqgKL7TgkeRU8bFXoXbkbW (tab Quy hoạch IP, Luồng mạng & FW). Triển khai qua `change-request`.
+
+## vSphere live bổ sung (2026-11-25)
+Nguồn: [[2026-11-25-vsphere-health-FSG-FHN]].
+- ESXi: .21 / .22 7.0.3 b23307199 (R650xs, Gold 5320), .23 7.0.3 b24411414 (R660xs, Gold 6442Y). vSphere 7 đã hết general support từ 02/10/2025.
+- NTP OK cả 3 host; có VM NTP riêng `BASE_Infra_NTP_10.199.120.21`. Cert hạn 13/03/2029 (.21 / .22), 17/08/2030 (.23).
+- Alarm duy nhất: UnityHN02_LUN01 Critical **từ 19/11/2025** (chưa ack).
+- VM 116 (103 bật / 13 tắt). **Cụm PROD_IC tắt toàn bộ** (App01 / 02, DB01–04, Elk, khoảng 2.5 TB) → ứng viên giải phóng LUN01 (xem [[open-questions]] #28).

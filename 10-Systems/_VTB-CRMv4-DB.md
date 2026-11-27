@@ -4,7 +4,7 @@ status: unverified
 site: FHN01
 customer: VietinBank
 group: VTB-CRMv4-DB
-updated: 2026-11-24
+updated: 2026-11-25
 tags: [system, postgresql, patroni, percona, vietinbank, crm-v4]
 ---
 # VTB CRM v4 — PostgreSQL HA (Percona, rút gọn 3 VM)
@@ -54,7 +54,7 @@ pgBackRest_Retention (ảnh chữ nhỏ, số **gần đúng**): OK; latest `202
 - Là số liệu thực tế duy nhất hiện có để sizing VTB **uCRM v5** (DB01 172.31.90.101 hiện chỉ 600 GB). Nếu v5 tăng như v4, cần ~1 TB/node cho 12 tháng. Xem [[2026-11-24-ket-noi-FHN01-FHN02-app-db]].
 
 ## Cần xác minh
-- ~~IP mâu thuẫn .51–.53 với .32~~ → **Đã giải (live 2026-11-24): cụm DB v4 là .31 / .32 / .33.** Dải .90.51–.53 trong x18 là cụm khác hoặc dữ liệu cũ (cần xác minh nếu còn dùng).
+- ~~IP mâu thuẫn .51–.53 với .32~~ → **Đã giải (live 2026-11-24): cụm DB v4 là .31 / .32 / .33.** Dải .90.51–.53 trong x18 là cụm khác hoặc dữ liệu cũ (cần xác minh nếu còn dùng). **25/11:** đó là cụm uCRM cũ (VTB_uCRM_DB02 .52 tắt, VTB_uCRM_DB05 .55 bật), xem [[2026-11-25-vsphere-health-FSG-FHN]].
 - PG02 có đang là primary không (`patronictl list`)? Tên, IP của 2 node còn lại?
 - Thành phần cụ thể trên mỗi VM (etcd, HAProxy, keepalived/VIP, pgBouncer, PMM?).
 - PG major version, OS, dung lượng `/` của các node khác.
