@@ -1,7 +1,7 @@
 ---
 type: site
 status: unverified
-updated: 2026-11-25
+updated: 2026-11-27
 tags: [site, fpt, hcm, basebs, smb, lab]
 ---
 # FSG02 — FPT Tân Thuận DC7-C12 (SMB Production + LAB)
@@ -67,7 +67,7 @@ Nguồn: [[2026-11-25-vsphere-health-FSG-FHN]] (vSphere Client UI, read-only).
   - **Chỉ 3 host:** .21 / .22 (R740, 2× Gold 6252, 256 GB, ESXi 6.5.0 b13635690) và .25 (R650xs, 2× Silver 4314, 384 GB, 6.5.0 b19092475).
   - 109 VM (84 bật / 25 tắt).
 - **HA ON nhưng Host failure response = Disabled** (host chết thì VM không restart). DRS OFF, EVC Disabled. **RAM 86%** (84 / 86 / 88%), không đạt N+1.
-- **NTP hỏng cả 3 host:** .25 ≈ +8 giờ 01 phút; .21 ≈ −4 giờ 13 phút; .22 ≈ −2 giờ 24 phút.
+- **NTP hỏng cả 3 host:** .25 ≈ +8 giờ 01 phút; .21 ≈ −4 giờ 13 phút; .22 ≈ −2 giờ 24 phút. → CR nháp [[2026-11-27-ntp-esxi-smb]] (27/11, chờ duyệt; nguồn NTP SMB chưa chốt, [[open-questions]] #43).
 - Datastore (VMFS5): BASE_Customer_LUN01 81.5% (Warning từ 21/07/2026), BASE_Backup_LUN01 61%, BASE_Infra_LUN01 55%.
 - VM tắt đáng chú ý: BASE_Infra_Wazuh, SELKs, LogSvr; CN247_ExpressC_SUB / ExpressE_SUB; PROD_ReverseProxy01; PROD_UnifyCRM_App03.
 - **LAB 172.23.90.10:** chưa rà (cần đăng nhập SSO `vcsa.labbasebs.com`).

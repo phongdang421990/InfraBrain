@@ -1,6 +1,6 @@
 ---
 type: risk-register
-updated: 2026-11-26
+updated: 2026-11-27
 tags: [risk]
 ---
 # Risk register
@@ -22,7 +22,7 @@ Các nhóm rủi ro đã nêu trong quá trình tiếp nhận. Bằng chứng g�
 | R-011 | Thiết bị EOL / hết bảo hành, linh kiện hiếm (EMC 520-byte, BBU; C3650 / 3850 uptime ~9 năm) | Toàn bộ DC (x23, x06) | Cao | Cao | Cao | Quyết định gói bảo trì FPT / TPM; lộ trình refresh | | Mở |
 | R-012 | Inventory sai lệch (x05, BG_Maintain có lỗi copy-paste) gây thao tác nhầm | CMDB | Cao | TB | TB | Lấy inventory live làm nguồn sự thật | | Mở |
 | R-013 | Đường MPLS Eximbank chập chờn (track 196 đổi trạng thái 1215 lần; thiếu route .38) | [[Eximbank]] / RNET-02 VDC | TB | TB | TB | Thu log IP SLA, làm việc với carrier | | Mở |
-| R-014 | **ESXi không đồng bộ NTP trên toàn hệ thống: 14/31 host** lệch từ vài phút tới khoảng 8 giờ. VDC 5/8 (.125 +7h57); FPTDC .178 ≈ +7 phút, .188 ≈ −8 phút; SMB .25 ≈ +8h01, .21 ≈ −4h13, .22 ≈ −2h24; FHN01 .22 ≈ +7h58 (trỏ nhầm NTP 10.189.120.20), .53 ≈ −1h, **PCCE3 .45 / .47 (VietinBank) ≈ −25 / −19 phút**. Hệ quả: guest nhảy giờ khi VMware Tools đồng bộ (vMotion / snapshot / resume), log và timeline RCA sai, lỗi Kerberos / TLS / SIP | VDC ([[2026-11-24-vsphere-health-VDC]]); FSG01, FSG02, FHN01 ([[2026-11-25-vsphere-health-FSG-FHN]]) | Đã xảy ra | Cao | **Rất cao** | CR NTP từng site (SMB và PCCE3 trước): đúng server theo site, mở firewall ntpClient, start ntpd; chỉnh giờ tay host lệch lớn trước; kiểm tra VM đồng bộ giờ với host | | Mở |
+| R-014 | **ESXi không đồng bộ NTP trên toàn hệ thống: 14/31 host** lệch từ vài phút tới khoảng 8 giờ. VDC 5/8 (.125 +7h57); FPTDC .178 ≈ +7 phút, .188 ≈ −8 phút; SMB .25 ≈ +8h01, .21 ≈ −4h13, .22 ≈ −2h24; FHN01 .22 ≈ +7h58 (trỏ nhầm NTP 10.189.120.20), .53 ≈ −1h, **PCCE3 .45 / .47 (VietinBank) ≈ −25 / −19 phút**. Hệ quả: guest nhảy giờ khi VMware Tools đồng bộ (vMotion / snapshot / resume), log và timeline RCA sai, lỗi Kerberos / TLS / SIP | VDC ([[2026-11-24-vsphere-health-VDC]]); FSG01, FSG02, FHN01 ([[2026-11-25-vsphere-health-FSG-FHN]]) | Đã xảy ra | Cao | **Rất cao** | CR NTP từng site (SMB và PCCE3 trước): đúng server theo site, mở firewall ntpClient, start ntpd; chỉnh giờ tay host lệch lớn trước; kiểm tra VM đồng bộ giờ với host. **27/11: CR nháp chờ Đăng duyệt** [[2026-11-27-ntp-esxi-smb]], [[2026-11-27-ntp-esxi-pcce3-fhn01]]. FHN01 .22 đang chạy `VTB_uCRMv5_DB01` → CR NTP cho .22 nên làm trước go-live uCRM v5 | Đăng | Mở (CR draft) |
 | R-015 | AppSvr Cluster VDC: EVC off với 3 đời CPU, 4 build ESXi khác nhau, DRS off, host isolation và APD/PDL off. vMotion bị hạn chế, gây khó khi bảo trì hoặc reboot host (.123 đang chờ reboot) | VDC AppSvr ([[2026-11-24-vsphere-health-VDC]]) | Cao | TB | Cao | Lộ trình chuẩn hóa / nâng cấp; lập kế hoạch evacuate .123 | | Mở |
 | R-017 | **FHN01 A-App Cluster (6 host, VietinBank PROD / UAT, CN247 standby, TPBank, Lotte): vSphere HA OFF, DRS OFF.** Host lỗi thì VM không tự khởi động lại | [[FHN01]] (live 2026-11-24) | TB | **Cao** | **Cao** | CR bật HA. Trước đó cần kiểm tra admission control vì RAM đã 70% | | Mở |
 | R-018 | **Host .47 PCCE3-B lỗi quạt CRITICAL từ 19/12/2024**, alarm bị ack nên ẩn. PCCE3 chạy local disk, không có HA phần cứng | [[FHN01]] / [[VietinBank]] | Cao | Cao | **Cao** | Kiểm tra CIMC, mở case thay quạt (cần bảo trì) | | Mở |

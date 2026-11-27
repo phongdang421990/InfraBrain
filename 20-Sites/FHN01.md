@@ -1,7 +1,7 @@
 ---
 type: site
 status: unverified
-updated: 2026-11-26
+updated: 2026-11-27
 tags: [site, fpt, hanoi, basebs, pcce3]
 ---
 # FHN01 — FPT Duy Tân, Hà Nội (rack CG3-i5)
@@ -106,8 +106,8 @@ Nguồn: [[2026-11-25-vsphere-health-FSG-FHN]].
   - .45 / .47 / .53: 6.5.0 b8294253.
   - A-App trộn 3 đời CPU, 3 build, EVC tắt.
 - **NTP:**
-  - .22 Stopped và trỏ nhầm **10.189.120.20** (NTP của SMB) → ≈ +7 giờ 58 phút.
-  - **.45 / .47 (PCCE3 VietinBank) Stopped → ≈ −25 / −19 phút.**
+  - .22 Stopped và trỏ nhầm **10.189.120.20** (NTP của SMB) → ≈ +7 giờ 58 phút. Host này chạy `VTB_uCRMv5_DB01` ([[VietinBank]]) → nên sửa NTP trước go-live uCRM v5 (CR riêng, chưa soạn).
+  - **.45 / .47 (PCCE3 VietinBank) Stopped → ≈ −25 / −19 phút.** → CR nháp [[2026-11-27-ntp-esxi-pcce3-fhn01]] (27/11, chờ duyệt).
   - .53 Disabled → ≈ −1 giờ.
   - .21 / .23 / .24 / .25 / .26 OK (10.179.120.20).
 - VM: 201 (192 bật / 9 tắt).

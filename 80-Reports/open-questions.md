@@ -53,5 +53,9 @@ Các câu dưới đây được nạp ngày 2026-11-24 từ [[BaseBS-Infra-Mast
 | 40 | HNK AICC: có cần làm media_timeout trong vars.xml và dòng xoá sip_profiles/*.xml (HD 1.0.10 §4.2–4.3) không? | [[Heineken]] | Kiệt chỉ chốt migration + CDR 1.0.9; HD 1.0.10 ghi bắt buộc | Anh Kiệt | Mở (đã hỏi trong email 27/11) | |
 | 41 | Máy DB HNK có backup tự động hằng đêm thật không (`/db-backup/file-backup/`)? Là đường lùi duy nhất sau nâng cấp 1.0.11 | [[Heineken]] | Tài liệu cài DB nói có, chưa kiểm live | Đăng | Mở | |
 | 42 | File `aicc.service` 1.0.9 trên Drive bị cụt dòng ExecStartPre: đã nhờ sửa chưa? | [[Heineken]] | systemd-analyze: Unbalanced quoting | Anh Kiệt / anh Minh | Mở (đã báo trong email 27/11) | |
+| 43 | 10.189.120.20 (NTP đang cấu hình trên SMB .21 / .22) là máy gì, còn chạy không? Nguồn NTP chuẩn cho SMB là .120.20 hay AD .120.21, và AD SMB lấy giờ từ đâu? | [[FSG02]] | Live 25/11: .120.20 không có trong inventory; VDC / FHN02 dùng AD .120.20 + VM NTP .120.21 | Đăng (pre-check 0b của [[2026-11-27-ntp-esxi-smb]]) | Mở | |
+| 44 | VM nào chạy trên PCCE3 .45 / .47 (vai trò, side)? Domain PCCE3 lấy giờ từ đâu (PDC nào)? Có VM nào bật "Synchronize guest time with host" không? | [[VietinBank]] / [[FHN01]] | Vault chưa có | Đăng / team PCCE (pre-check 0c và cc-echo mục B của [[2026-11-27-ntp-esxi-pcce3-fhn01]]) | Mở | |
+| 45 | Phần mềm và lịch backup (snapshot) cho VM ở SMB Cluster-01 và PCCE3? Cần để chọn cửa sổ 2 CR NTP | [[FSG02]] / [[FHN01]] | Vault chưa có | Đăng / anh Tín | Mở | |
+| 46 | Quy trình báo change cho VietinBank (đầu mối, thời hạn báo trước, có cho gọi test không) và lịch go-live uCRM v5? | [[VietinBank]] | Mục SLA / liên hệ còn trống; email phongth 23/11 chỉ nói "sắp go-live" | Anh Phong / anh Thanh | Mở | |
 
 Các mâu thuẫn K1–K9, K17–K19, K21–K26, K28–K30, K32 đã có hướng chốt (xem §7 báo cáo). Chúng chỉ cần xác nhận live, không cần hỏi thêm.
