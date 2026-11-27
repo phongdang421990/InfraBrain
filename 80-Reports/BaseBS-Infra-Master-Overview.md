@@ -11,7 +11,7 @@ tags: [report, basebs, handover, topology, cmdb, inventory]
 >   - `[2N]`: đã xác minh từ ≥2 nguồn độc lập. Bằng chứng live (CLI/PowerCLI/vCenter) được tính là 1 nguồn mạnh.
 >   - `[1N]`: chỉ có 1 nguồn.
 >   - `[SL]`: suy luận của doc-scribe.
->   - `[VAULT]`: lấy từ note của chủ vault.
+>   - `[VAULT]`: lấy từ note của Đăng.
 > - **Mã nguồn**: `x01…x24` (file Excel đã trích), `CONF` (FortiGate FPT Cloud), `BB` (biên bản FPT 27/08), `BG` (báo giá FPT 07/10), `NOTES`/`BRIEF` (bản tổng hợp cũ 13/11). Bảng ánh xạ ở [[#9. Phụ lục nguồn]].
 > - **Bảng IP chi tiết** tách sang [[BaseBS-Infra-Master-Overview-Appendix-IP]].
 > - Không có password, license key hay PSK nào trong file này. Credential nằm trong password manager hoặc các sổ gốc (xem §1.3).
@@ -32,9 +32,9 @@ Liên kết: [[VDC-VNPT]] · [[FDC-FPT]] · [[VietinBank]] · [[Eximbank]] · [[
 | Thiết bị mạng (DC của FPT) | **49**: 2 SW L2, 14 SW L3, 20 router, 8 FW, 5 thiết bị LAB. Không gồm VDC | [1N] BG trang 2 (danh sách chi tiết) |
 | Thiết bị phần cứng cần bảo trì | **92** (server + SAN + network) | [1N] x23 / BG Maintain (chưa đọc chi tiết) |
 | ESXi host | **36** host có trong ServerLogin, cộng 2 host SMB (.23/.24) chỉ có trong DeviceList → **~38** | [2N] x11 ≡ x17 + x14 + rack x13 |
-| vCenter | **7**: 10.0.3.50 (FPTDC, live), 10.138.110.10 vcsa.sg02basebs.com (7.0.3, live screenshot), 10.169.110.12 vcsa.basebs.com (6.7, live), 10.179.110.10, 10.189.110.10, 10.199.110.10, 172.23.90.10 (LAB) | [2N] cho 3 cái live; 6 vCenter có URL `/ui` do **chủ vault xác nhận 2026-11-24** (xem bảng SSO domain bên dưới); 10.0.3.50 vẫn là [2N] từ x01 |
+| vCenter | **7**: 10.0.3.50 (FPTDC, live), 10.138.110.10 vcsa.sg02basebs.com (7.0.3, live screenshot), 10.169.110.12 vcsa.basebs.com (6.7, live), 10.179.110.10, 10.189.110.10, 10.199.110.10, 172.23.90.10 (LAB) | [2N] cho 3 cái live; 6 vCenter có URL `/ui` do **Đăng xác nhận 2026-11-24** (xem bảng SSO domain bên dưới); 10.0.3.50 vẫn là [2N] từ x01 |
 
-**vCenter ↔ SSO domain ↔ phạm vi** (chủ vault xác nhận 2026-11-24, không ghi credential; tài khoản nằm trong password manager):
+**vCenter ↔ SSO domain ↔ phạm vi** (Đăng xác nhận 2026-11-24, không ghi credential; tài khoản nằm trong password manager):
 
 | vCenter | SSO domain | Phạm vi / site |
 |---|---|---|
@@ -44,7 +44,7 @@ Liên kết: [[VDC-VNPT]] · [[FDC-FPT]] · [[VietinBank]] · [[Eximbank]] · [[
 | 172.23.90.10 | labbasebs.com | LAB ([[FSG02]]) |
 | 10.179.110.10 | ccxbasebs.com | PCCE3 / CCX ([[FHN01]] Duy Tân) |
 | 10.199.110.10 | hn02basebs.com | Phạm Văn Bạch ([[FHN02]]) |
-| 10.0.3.50 | (chưa rõ) | FPTDC ([[FSG01]]). Chủ vault chưa liệt kê; cần xác nhận còn dùng không |
+| 10.0.3.50 | (chưa rõ) | FPTDC ([[FSG01]]). Đăng chưa liệt kê; cần xác nhận còn dùng không |
 | VM | **VDC: 107** (live 21/11). **FPTDC: 164** (live 22/11; 5 host). Các site khác không có export vCenter; chỉ có sổ VM theo sheet, ~900 dòng IP (§3) | [2N] x06, x01 / [1N] x18 |
 | SAN array | **8**: VNXe3200 ×2 + Unity380XT (FSG01), Unity350F + Unity380 (VDC), Unity300 (FHN01), Unity380 (FSG02-SMB), Unity380 (FHN02). Tổng raw ≈ 525 TB (§3.x) | [2N] x14 Storage Info + x13 rack + x17 |
 | SAN switch | 10 (2 mỗi DC): Brocade 300 / Connectrix DS-300B / DS-6505B / G620 | [2N] x05 + rack x13 + StorageLogin |
@@ -701,7 +701,7 @@ Cột "Nghiêng về" là phương án doc-scribe đề xuất tin theo, kèm l�
 | K11 | Model router FHN01 | DeviceList: ISR4431-SEC | BG 2026: ISR4331-SEC / -V | Chưa chọn. Cần show version |
 | K12 | Router MPLS FSG01 | DeviceList: 2911 10.127.129.2 | Rack: ROUTER-4331 10.127.109.2 | Chưa chọn. Có thể đã thay router |
 | K13 | Perimeter FSG01 | NOTES: PA-3020 hay FG chưa rõ | Port map (x03 / x05) + BG 2026: PA-3020 ×2 vẫn đang được bảo trì; Plan 2023 thay FG chưa làm; FG-201E trong rack = CLD.FW [SL] | **PA-3020 là perimeter FDC [2N]** |
-| K14 | SMB vCenter 10.189.110.10 và Internal switch 02 | DeviceList: switch 02 = .110.10 | x11 vNic: VI SDK = .110.10; x05: CoreSW là stack .110.20 | **Đã giải quyết: .110.10 là vCenter SMB** (chủ vault xác nhận 2026-11-24; x11). DeviceList ghi sai |
+| K14 | SMB vCenter 10.189.110.10 và Internal switch 02 | DeviceList: switch 02 = .110.10 | x11 vNic: VI SDK = .110.10; x05: CoreSW là stack .110.20 | **Đã giải quyết: .110.10 là vCenter SMB** (Đăng xác nhận 2026-11-24; x11). DeviceList ghi sai |
 | K15 | Số FW và router tại SMB | DeviceList / BG: 2 FG, 2–3 RNET | Rack DC7-C12: 1 FIREWALL, 1 ROUTER-NET | Chưa chọn. Kiểm tra vật lý |
 | K16 | Host SMB | ServerLogin: 3 (.21 / .22 / .25) | DeviceList / PortMap / zoning: 5 (.21–.25) | 5 host vật lý; .23 / .24 có thể đã ra khỏi cluster [SL] |
 | K17 | Server LAB | DeviceList: .244 / .246 / .249 / .252 | Storage Info / ServerLogin: .244 / .248 / .249 / .252 (+ .241) | ServerLogin |
@@ -725,7 +725,7 @@ Cột "Nghiêng về" là phương án doc-scribe đề xuất tin theo, kèm l�
 
 ---
 
-## 8. Câu hỏi cần chủ vault xác minh
+## 8. Câu hỏi cần Đăng xác minh
 
 1. SMB thực tế có 1 hay 2 FortiGate và 1, 2 hay 3 RNET? (K15) IP mgmt riêng của từng FG là gì? 10.189.110.1 có phải SVI không?
 2. vCenter SMB có đúng là 10.189.110.10 không? Host .23 / .24 còn trong cluster không? (K14, K16)

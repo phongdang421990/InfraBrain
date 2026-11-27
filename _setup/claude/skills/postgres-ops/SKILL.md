@@ -36,7 +36,7 @@ sudo -u postgres psql -d <db> -Atc "select schemaname,tablename,tableowner from 
 
 ## 5. Backup và restore
 - "Có backup" chưa đủ: restore thử vào máy/instance tạm, ghi thời gian, kích thước, kiểm tra số bản ghi bảng chính.
-- Trước nâng cấp có migration: khuyến nghị `pg_dump -Fc` riêng; nếu chủ vault quyết không dump → ghi rõ trong CR, xác minh backup tự động gần nhất trước khi bắt đầu.
+- Trước nâng cấp có migration: khuyến nghị `pg_dump -Fc` riêng; nếu Đăng quyết không dump → ghi rõ trong CR, xác minh backup tự động gần nhất trước khi bắt đầu.
 
 ## 6. Ghi lại
 - Note DB `10-Systems/_<he-thong>-DB.md`: version, node, owner, extension, backup, HA.

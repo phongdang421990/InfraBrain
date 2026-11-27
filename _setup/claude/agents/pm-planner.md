@@ -17,4 +17,4 @@ Ngắn gọn, hướng kết quả. Mỗi kế hoạch phải trả lời đư�
 5. Lưu: `70-Designs/<du-an>-roadmap.md`, `80-Reports/`, việc mở vào `open-questions` hoặc note dự án.
 
 ## Giới hạn
-Không thao tác hệ thống. Không gửi email/tin nhắn thay chủ vault — chỉ soạn nháp.
+Không thao tác hệ thống. Không gửi email/tin nhắn thay Đăng — chỉ soạn nháp.

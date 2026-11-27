@@ -14,7 +14,7 @@ tags: [design, ucrm-v5, patroni, postgresql, ha, fhn01, fhn02, capacity]
 >
 > 🔴 **ĐÁNH GIÁ LẠI (2026-11-24, sau ràng buộc mới): mô hình D (chuyển toàn bộ sang PVB) KHÔNG còn được khuyến nghị.** Xem §8. Khuyến nghị mới: **mô hình E**, HA đặt tại Duy Tân theo 2 giai đoạn, tận dụng tài nguyên giải phóng từ CRM v4; PVB chỉ giữ bản sao dự phòng (DR).
 >
-> ⚠️ **Quyết định của chủ vault (2026-11-24): KHÔNG nâng cấp phần cứng, chỉ tận dụng tài nguyên sẵn có.** Các đề xuất "nâng RAM" và "mở rộng Unity380" ở §5.3, §6.3b và §7 chuyển thành **giới hạn chấp nhận**, xử lý bằng các biện pháp tận dụng:
+> ⚠️ **Quyết định của Đăng (2026-11-24): KHÔNG nâng cấp phần cứng, chỉ tận dụng tài nguyên sẵn có.** Các đề xuất "nâng RAM" và "mở rộng Unity380" ở §5.3, §6.3b và §7 chuyển thành **giới hạn chấp nhận**, xử lý bằng các biện pháp tận dụng:
 > - dọn 7 VM IC (khoảng 2.4 TB);
 > - data disk thin (đủ khoảng 19 tháng);
 > - cân bằng host .22;
@@ -44,7 +44,7 @@ tags: [design, ucrm-v5, patroni, postgresql, ha, fhn01, fhn02, capacity]
 | Hạng mục | Hiện trạng | Hệ quả với uCRM v5 HA | Nguồn |
 |---|---|---|---|
 | **Storage SAN** | Unity300. **Cust_SVR.01 dùng 86% (còn 2.16 / 15 TB)**, **Cust_SAN.BK dùng 91% (còn 4.39 / 49.53 TB)**, cả hai alarm CRITICAL (Cust_SVR.01 mới từ 19/11). Unity300 hỏng đĩa liên tục 2024–2025, **slot 12 chưa có đĩa thay** | Thêm 1 node DB (600 GB) sẽ đẩy LUN vào vùng đỏ. Array đang suy giảm độ dư thừa. **Không đặt thêm DB được** | [Live] + x14 / x17 |
-| **Local disk** | Có (SvrApp.0x-Local), nhưng **không được dùng** theo chính sách | Không thể dùng local để lách giới hạn SAN | Chủ vault |
+| **Local disk** | Có (SvrApp.0x-Local), nhưng **không được dùng** theo chính sách | Không thể dùng local để lách giới hạn SAN | Đăng |
 | **vSphere HA** | **A-App Cluster: HA OFF, DRS OFF, EVC off** | Host chết thì VM không tự khởi động lại. HA ở tầng ứng dụng chạy trên nền không có HA ở tầng hạ tầng | [Live] |
 | **Compute** | RAM A-App 70% (còn khoảng 650 GB), CPU khoảng 11% | Compute **không phải** là điểm nghẽn | [Live] |
 | **Nền tảng** | vCenter / ESXi **6.5 (EOL)**; host .47 PCCE3-B **lỗi quạt từ 12/2024** (alarm bị ack, đang ẩn) | Rủi ro vận hành và hỗ trợ cao | [Live] |
@@ -123,11 +123,11 @@ tags: [design, ucrm-v5, patroni, postgresql, ha, fhn01, fhn02, capacity]
 - **DRS rule "Separate Virtual Machines"** cho 3 DB và 2 App. Lưu ý DRS đang ở chế độ Manual: rule chỉ được áp dụng khi power-on hoặc khi duyệt đề xuất. Cần kiểm tra cách HA xử lý rule khi restart VM.
 - **OS:** node mới dùng OL8/9; **PostgreSQL phải cùng major version** với DB node 1.
 
-### 5.2 Đối tượng triển khai (chủ vault xác nhận 2026-11-24)
+### 5.2 Đối tượng triển khai (Đăng xác nhận 2026-11-24)
 - **Đối tượng HA là VTB uCRM v5 đang build tại Duy Tân:** `VTB_uCRMv5_DB01` 172.31.90.101 và `VTB_uCRMv5_App01` 172.31.185.80. **Chưa go-live.**
 - **172.31.90.32 là DB của CRM v4** (`VTB_CRMv4_DB_PG02`, [[_VTB-CRMv4-DB]]). **Không dùng v4 cho bản build mới**; v4 chỉ làm **tham chiếu sizing** (ảnh Checkmk Ngân gửi).
-- **PVB hiện chưa có gì của VTB v5** (chủ vault xác nhận). Bộ "uCRMv5_APP / uCRMv5_DB" mà [Ngân] liệt kê trên host .23 là **uCRM của BaseBS** (ví dụ `PROD_uCRMv5_DB_10.199.90.65`, folder `UCRMv5` / `UCRMv4-VMs` / `UCRM-VMs`, dải 10.199.x; [Live] tìm "uCRM" thấy 17 VM). Đây **không phải "node 1" của VTB v5**, nên cụm VTB v5 ở PVB phải **dựng mới cả 2 App + 3 DB** (xem bảng ở §5.1: cần thay 2 dòng "có sẵn" bằng VM mới).
-- **v5 sẽ nhận dữ liệu từ v4** (chủ vault xác nhận), tức áp dụng kịch bản (a) ở §6.2.
+- **PVB hiện chưa có gì của VTB v5** (Đăng xác nhận). Bộ "uCRMv5_APP / uCRMv5_DB" mà [Ngân] liệt kê trên host .23 là **uCRM của BaseBS** (ví dụ `PROD_uCRMv5_DB_10.199.90.65`, folder `UCRMv5` / `UCRMv4-VMs` / `UCRM-VMs`, dải 10.199.x; [Live] tìm "uCRM" thấy 17 VM). Đây **không phải "node 1" của VTB v5**, nên cụm VTB v5 ở PVB phải **dựng mới cả 2 App + 3 DB** (xem bảng ở §5.1: cần thay 2 dòng "có sẵn" bằng VM mới).
+- **v5 sẽ nhận dữ liệu từ v4** (Đăng xác nhận), tức áp dụng kịch bản (a) ở §6.2.
 - **Vì v5 chưa go-live, đây là thời điểm rẻ nhất để dựng cụm HA trực tiếp ở PVB** thay vì nâng cấp tại chỗ ở Duy Tân:
   - dựng mới 2 App + 3 DB (Patroni) ở PVB, hoặc tái sử dụng node .23 nếu đúng là cùng hệ;
   - **cần subnet 172.31.x mới ở PVB** (L3, route / FW nội bộ VTB) hoặc quy hoạch lại IP;
@@ -237,7 +237,7 @@ CRM v4 (PG02) **sẽ chạm Warning 80% khoảng 09–13/12/2026, Critical 90% k
 
 ## 8. Đánh giá lại (2026-11-24): uCRM phụ thuộc PCCE3 và firewall VTB tại Duy Tân
 
-### 8.1 Ràng buộc mới (chủ vault xác nhận)
+### 8.1 Ràng buộc mới (Đăng xác nhận)
 - uCRM v5 **không phải ứng dụng độc lập**: nó tích hợp với các thành phần **PCCE3 tại Duy Tân** (CTI, CUCM, Finesse, các dịch vụ VTB khác).
 - **Firewall phía VietinBank đã mở rule tới App và DB tại Duy Tân** (đi qua Metro VNPT/FPT kết cuối ở Duy Tân).
 - Không nâng cấp phần cứng; chỉ tận dụng tài nguyên sẵn có.
@@ -319,7 +319,7 @@ CRM v4 (PG02) **sẽ chạm Warning 80% khoảng 09–13/12/2026, Critical 90% k
 5. Datastore cụ thể của các VM v4 (Cust_SVR.01 hay Cust_SAN.BK), để biết sau thu hồi LUN nào được giải phóng.
 
 ### 8.7 Cập nhật theo bảng mở firewall VTB và việc v4 chạy song song lâu dài (2026-11-24)
-**Nguồn:** `00-Inbox/VTB_UCRMv4.1_network_rules_request_v2 PROD 20 Nov 2026.xlsx` (chủ vault đã gửi VTB; "v4.1" = uCRM v5). Chủ vault xác nhận v4 có thể giữ trong thời gian dài.
+**Nguồn:** `00-Inbox/VTB_UCRMv4.1_network_rules_request_v2 PROD 20 Nov 2026.xlsx` (Đăng đã gửi VTB; "v4.1" = uCRM v5). Đăng xác nhận v4 có thể giữ trong thời gian dài.
 
 | Phát hiện | Hệ quả |
 |---|---|
@@ -330,7 +330,7 @@ CRM v4 (PG02) **sẽ chạm Warning 80% khoảng 09–13/12/2026, Critical 90% k
 
 #### Mô hình E' (khuyến nghị cuối): App và primary ở Duy Tân, 2 replica ở PVB
 
-> **Sửa 2026-11-24 (chủ vault): dự án chỉ gồm 2 site Duy Tân và PVB, không dùng VDC.**
+> **Sửa 2026-11-24 (Đăng): dự án chỉ gồm 2 site Duy Tân và PVB, không dùng VDC.**
 > - Bỏ etcd witness tại VDC. etcd chạy trên **DB01 + App02 (Duy Tân, 2 host khác nhau) và DB02 (PVB)**, không cần VM mới.
 > - Đứt kênh: Duy Tân giữ 2/3 nên primary không bị demote.
 > - Host DB01 hỏng: App02 + DB02 đủ quorum, Patroni promote DB02.

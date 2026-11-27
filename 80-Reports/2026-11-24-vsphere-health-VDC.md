@@ -6,7 +6,7 @@ tags: [report, health-check, vsphere, vdc, basebs]
 ---
 # Health check vSphere: VDC (vcsa.basebs.com): 2026-11-24
 
-- **Nguồn:** vSphere Client UI **live**, đọc trong khoảng 16:05–16:30 ngày 2026-11-24 (UTC+7) qua Claude in Chrome. Chủ vault tự đăng nhập.
+- **Nguồn:** vSphere Client UI **live**, đọc trong khoảng 16:05–16:30 ngày 2026-11-24 (UTC+7) qua Claude in Chrome. Đăng tự đăng nhập.
 - **Chỉ đọc:** chỉ bấm vào cây inventory, các tab, menu điều hướng, bộ lọc hiển thị và nút mở rộng mục. JavaScript chỉ dùng để cuộn và đọc text của trang. **Không** bấm Acknowledge, Reset, Renew, Rescan, Edit, Power hay console.
 - Liên quan: [[VDC-VNPT]] · [[BaseBS-Infra-Master-Overview]] · [[risk-register]] · [[VietJet]] · [[Eximbank]]
 
@@ -109,7 +109,7 @@ Lệch giờ được đo bằng cách so trường "Date & Time" trên UI với
 - 14:21: **I/O latency cao** trên LUN Unity `naa.60060160b6b85500b387836171d27bbc` (host .123), hồi phục lúc 14:22.
 - 15:30 / 15:57: Hardware sensor của .24 và .125 đều green.
 - Alarm CPU trên B-CUCMPUB đổi trạng thái liên tục.
-- SSO: 1 lần đăng nhập thất bại từ 10.69.68.8 lúc 16:05:10, dùng tài khoản thuộc domain `ccxbasebs.com` (sai domain cho vCenter này), sau đó đăng nhập thành công bằng `basebs.com`. Khả năng cao là chính chủ vault.
+- SSO: 1 lần đăng nhập thất bại từ 10.69.68.8 lúc 16:05:10, dùng tài khoản thuộc domain `ccxbasebs.com` (sai domain cho vCenter này), sau đó đăng nhập thành công bằng `basebs.com`. Khả năng cao là chính Đăng.
 
 ## 9. Đối chiếu với tài liệu
 | Hạng mục | Tài liệu | Live | Kết luận |
@@ -130,4 +130,4 @@ Lệch giờ được đo bằng cách so trường "Date & Time" trên UI với
 4. **Host .123 Reboot Required:** đưa vào maintenance mode và reboot qua CR. Trước đó cần lưu ý: EVC đang tắt nên **vMotion từ .123 (Gold 5220) chỉ đi được sang .124** (cùng đời CPU), mà .124 đã dùng 74% RAM. Cần lên kế hoạch chuyển VM cẩn thận.
 5. **Chuẩn hóa cluster:** lộ trình nâng cấp ESXi và vCenter (6.x đã EOL), bật EVC ở baseline thấp nhất (Broadwell), cân nhắc bật DRS ở chế độ partially automated, bật host isolation response và APD/PDL.
 6. Dọn dẹp: 4 VM tắt (khoảng 400 GB), 2 alarm CCX-02, port group trùng tên, VLAN 186/187 không dùng.
-7. **Read-only tiếp theo:** kiểm tra snapshot và VMware Tools theo từng VM (mở từng VM, hoặc dùng PowerCLI `Get-Snapshot` khi chủ vault đồng ý chạy).
+7. **Read-only tiếp theo:** kiểm tra snapshot và VMware Tools theo từng VM (mở từng VM, hoặc dùng PowerCLI `Get-Snapshot` khi Đăng đồng ý chạy).

@@ -56,9 +56,9 @@ Thuộc [[FDC-FPT]]. Báo cáo tổng: [[BaseBS-Infra-Master-Overview]] §3.5. I
 ## Cần xác minh
 - Có liên kết trực tiếp PVB ↔ Duy Tân không, hay chỉ có IPsec qua VDC (K20)? **24/11:** không có kênh DC↔DC của BaseBS; nhưng FHN1 (.51) và FHN2 (.50) cùng nằm trong segment Metro FPT của HDSS 192.168.100.48/29 (kênh của khách hàng, không dùng cho BaseBS).
 - ~~FW02 có thực sự nằm ở PVB không (K33)?~~ **Đã xác nhận 24/11**: cụm FHN02-HA đủ 2 máy, in-sync.
-- Route 10.69.68.0/24 "VSG.VPN" (pool VPN admin?). **24/11:** có trên ExtSW → 10.199.20.123; máy chủ vault đi VPN với IP 10.69.68.8.
+- Route 10.69.68.0/24 "VSG.VPN" (pool VPN admin?). **24/11:** có trên ExtSW → 10.199.20.123; máy của Đăng đi VPN với IP 10.69.68.8.
 
-## Network live (CLI chủ vault chạy, 2026-11-24)
+## Network live (CLI Đăng chạy, 2026-11-24)
 ### FHN2.ExtSW (2× C9300L-24UXG stack)
 | Interface | IP | Vai trò |
 |---|---|---|

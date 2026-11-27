@@ -1,4 +1,4 @@
-# CR 2026-11-24-quarantine-credential-files: bước 1 (chủ vault tự chạy).
+# CR 2026-11-24-quarantine-credential-files: bước 1 (Đăng tự chạy).
 # Chuyển 12 file credential từ 00-Inbox\Base ra thư mục quarantine NGOÀI vault.
 # Script chỉ dùng Move-Item, KHÔNG xóa file. Hash được kiểm tra trước và sau khi chuyển.
 # Nếu đích đã có file trùng tên, script dừng trước khi chuyển bất kỳ file nào.

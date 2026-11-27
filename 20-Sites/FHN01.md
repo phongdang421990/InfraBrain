@@ -72,7 +72,7 @@ vCenter 10.179.110.10 [1N]. ESXi 6.5 [2N x11 + BG + rack].
 - ~~Mạng PCCE3 172.31.x có FW / router riêng không.~~ **Đã trả lời 2026-11-24:** gateway 172.31.x là FortiGate External-Primary (xem mục Network live).
 - "MetroNet PVB ↔ Duy Tân" trong [[VietinBank]]: BaseBS khai với FPT là "chỉ có VPN site-to-site" (x21).
 
-## Network live (CLI chủ vault chạy, 2026-11-24)
+## Network live (CLI Đăng chạy, 2026-11-24)
 Nguồn: `show ip interface brief`, `show vlan brief`, `show running-config | include ip route`, `show ip arp vlan 20` trên FHN1.ExtSW; `show system interface`, `get system ha status` trên FortiGate. Inventory x05 sai nhiều chỗ → **lấy mục này làm nguồn chuẩn**.
 
 ### FHN1.ExtSW (2× C3850-24T stack)
@@ -117,7 +117,7 @@ Nguồn: [[2026-11-25-vsphere-health-FSG-FHN]].
 - Triggered alarms vẫn là 3: Cust_SVR.01, Cust_SAN.BK, quạt .47 (ack 13/06/2025).
 
 ## Storage & phần cứng live (vCenter, Unisphere, iDRAC — 2026-11-25/26)
-Nguồn: vCenter (data service + datastore browser, chỉ đọc), Unisphere REST (GET), iDRAC Redfish (GET); chủ vault tự đăng nhập. Kế hoạch xử lý: [Kế hoạch tối ưu storage FHN01](https://claude.ai/artifact/WLNbuaoMhh8jx6nmTyVtk9).
+Nguồn: vCenter (data service + datastore browser, chỉ đọc), Unisphere REST (GET), iDRAC Redfish (GET); Đăng tự đăng nhập. Kế hoạch xử lý: [Kế hoạch tối ưu storage FHN01](https://claude.ai/artifact/WLNbuaoMhh8jx6nmTyVtk9).
 
 ### Datastore dùng chung (VMFS 5, LUN thin trên Unity300)
 | Datastore | Dung lượng | Đã dùng | Pool | Ghi chú |

@@ -5,7 +5,7 @@ description: Health check read-only cho VMware vCenter/ESXi (host, cluster HA/DR
 
 # vSphere health check
 
-## Bước 1 — Thu thập (chủ vault chạy hoặc agent chạy trên máy có quyền vào vCenter)
+## Bước 1 — Thu thập (Đăng chạy hoặc agent chạy trên máy có quyền vào vCenter)
 ```powershell
 # Một lần: Install-Module VMware.PowerCLI -Scope CurrentUser
 # Nếu vCenter dùng cert self-signed (chỉ trong mạng quản trị):

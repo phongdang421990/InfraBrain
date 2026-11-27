@@ -62,4 +62,4 @@ pgBackRest_Retention (ảnh chữ nhỏ, số **gần đúng**): OK; latest `202
 - Lượng WAL sinh ra mỗi ngày (`pg_stat_wal`).
 
 ## Lịch sử
-- 2026-11-24: tạo note từ chat Webex của Ngân (CCX-CCE, 23/11) và ảnh Checkmk do chủ vault gửi (Claude chat).
+- 2026-11-24: tạo note từ chat Webex của Ngân (CCX-CCE, 23/11) và ảnh Checkmk do Đăng gửi (Claude chat).

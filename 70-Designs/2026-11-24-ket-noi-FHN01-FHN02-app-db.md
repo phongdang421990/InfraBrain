@@ -20,7 +20,7 @@ Liên quan: [[_VTB-CRMv4-DB]] · [[FHN01]] · [[FHN02]] · [[BaseBS-Infra-Master
   - Chưa gồm chi phí vật tư và thiết bị đầu cuối.
   - Nâng cấp thêm 5 / 10 / 50 Mbps: +2.5 / +4 / +11 triệu VND/tháng + VAT.
   - Chưa có thông tin về độ trễ cam kết, SLA, kênh backup và thời gian triển khai.
-- **Việc giao cho chủ vault** (anh Phong, 23/11):
+- **Việc giao cho Đăng** (anh Phong, 23/11):
   1. Cùng anh QuangBA đánh giá tài nguyên hạ tầng.
   2. Đánh giá **băng thông 100M có đáp ứng được App–DB đặt ở 2 DC không**.
   3. Cân nhắc phương án **triển khai Standard (như hiện tại) trước, sau go-live mới chuyển sang HA**.
@@ -35,7 +35,7 @@ Liên quan: [[_VTB-CRMv4-DB]] · [[FHN01]] · [[FHN02]] · [[BaseBS-Infra-Master
 | IPsec | Hub ở RNET-01 VDC (HCM): tunnel tới FHN1.R1 (103.35.64.45), FHN1.R2, FHN2.R1. **Chưa rõ có tunnel trực tiếp FHN1 ↔ FHN2 hay không.** Nếu chỉ có hub-spoke, traffic HN→HN sẽ phải vòng qua HCM | [1N] x06 CLI |
 | Metro ở FHN01 | ExtSW Po24 MetroFPT (VLAN khách hàng 1009 / 1010 / 1018 / 1082 HDSS); VietinBank Metro VNPT (main) / FPT (backup) | [1N] x05 |
 | Metro ở FHN02 | HDSS MetroFPT (main), MetroCMC (backup, VLAN 2544) | [1N] x05 |
-| Đo từ máy chủ vault (qua VPN, interface "Ethernet 5"), 2026-11-24 | vCenter PVB 10.199.110.10: ping ~24 ms, TCP 443 OK. vCenter Duy Tân 10.179.110.10: ping ~30 ms, TCP 443 OK | Lệnh `Test-Connection`, `Test-NetConnection`. **Không phản ánh độ trễ giữa 2 site** |
+| Đo từ máy của Đăng (qua VPN, interface "Ethernet 5"), 2026-11-24 | vCenter PVB 10.199.110.10: ping ~24 ms, TCP 443 OK. vCenter Duy Tân 10.179.110.10: ping ~30 ms, TCP 443 OK | Lệnh `Test-Connection`, `Test-NetConnection`. **Không phản ánh độ trễ giữa 2 site** |
 | Hạ tầng tính toán | FHN01: ESXi 6.5, Unity300 (hỏng đĩa liên tục). FHN02: 3 host R650xs / R660xs, ESXi 7.0.3, Unity380 | [2N] |
 
 ## 3. Đánh giá kỹ thuật [SL: suy luận kỹ thuật, cần đo để xác nhận]
@@ -93,9 +93,9 @@ Liên quan: [[_VTB-CRMv4-DB]] · [[FHN01]] · [[FHN02]] · [[BaseBS-Infra-Master
 - **Nhưng PVB thiếu RAM.** Trước khi đặt thêm workload cần biết sizing của App + DB (vCPU / RAM / disk). Nếu tổng vượt khoảng 100–150 GB RAM thì nên **nâng RAM cho 3 host hoặc thêm host thứ 4** để giữ được N+1.
 - Duy Tân chỉ nên làm site DR hoặc standby (phương án B, giai đoạn HA), và **phải bật HA cho A-App Cluster** trước đã.
 
-## 3.6 Phương án chủ vault đề xuất (2026-11-24): giữ App + DB hiện có ở Duy Tân, dựng thêm 1 App (HA) + 2 node PostgreSQL (Patroni)
+## 3.6 Phương án Đăng đề xuất (2026-11-24): giữ App + DB hiện có ở Duy Tân, dựng thêm 1 App (HA) + 2 node PostgreSQL (Patroni)
 **Đầu vào:**
-- IP DB: chủ vault ban đầu ghi 10.169.110.10, sau đó **đính chính là `172.31.90.101`** (2026-11-24). Tin nhắn của Ngân về Patroni (CCX-CCE, 23/11) **đã nạp ngày 2026-11-24**: xem [[_VTB-CRMv4-DB]] (CRM v4 chạy Percona/Patroni rút gọn 3 VM, go-live 06/2026, PG02 172.31.90.32 tăng ~1.2–1.5 GiB/ngày). Tin nhắn gốc của anh Phong (SUPPORT-INFRA) vẫn chưa đọc được.
+- IP DB: Đăng ban đầu ghi 10.169.110.10, sau đó **đính chính là `172.31.90.101`** (2026-11-24). Tin nhắn của Ngân về Patroni (CCX-CCE, 23/11) **đã nạp ngày 2026-11-24**: xem [[_VTB-CRMv4-DB]] (CRM v4 chạy Percona/Patroni rút gọn 3 VM, go-live 06/2026, PG02 172.31.90.32 tăng ~1.2–1.5 GiB/ngày). Tin nhắn gốc của anh Phong (SUPPORT-INFRA) vẫn chưa đọc được.
 - **Hệ thống là VietinBank uCRM v5** ([[VietinBank]]). Đọc live trên vCenter Duy Tân 2026-11-24:
 
 | VM | OS | vCPU | RAM (active) | Disk (đã dùng) | Port group | Host |
@@ -132,10 +132,10 @@ Liên quan: [[_VTB-CRMv4-DB]] · [[FHN01]] · [[FHN02]] · [[BaseBS-Infra-Master
 - (Tùy chọn) witness etcd ở VDC nếu muốn tự failover sang Duy Tân.
 - Giai đoạn chuyển tiếp: giữ nguyên App + DB ở Duy Tân đến khi cutover sang PVB.
 
-## 3.7 Yêu cầu đã chốt (chủ vault, 2026-11-24)
+## 3.7 Yêu cầu đã chốt (Đăng, 2026-11-24)
 - **2 VM App chạy HA** (đã có App01 ở Duy Tân, thêm 1). **3 node DB Patroni** (đã có DB01 ở Duy Tân, thêm 2).
 - **Site chính: Duy Tân.**
-- Ứng dụng do BaseBS quản lý; chủ vault xác nhận không cần thông báo VTB. Ghi chú: nếu DB chứa dữ liệu khách hàng của VTB, cần đối chiếu điều khoản hợp đồng về vị trí lưu bản sao ở DC thứ 2 (việc này thuộc anh Phong).
+- Ứng dụng do BaseBS quản lý; Đăng xác nhận không cần thông báo VTB. Ghi chú: nếu DB chứa dữ liệu khách hàng của VTB, cần đối chiếu điều khoản hợp đồng về vị trí lưu bản sao ở DC thứ 2 (việc này thuộc anh Phong).
 
 ### Đặt node như thế nào khi site chính là Duy Tân [SL]
 **Bố trí A, khuyến nghị: HA trong cùng site, DR ở PVB**
@@ -163,7 +163,7 @@ Liên quan: [[_VTB-CRMv4-DB]] · [[FHN01]] · [[FHN02]] · [[BaseBS-Infra-Master
 - OS node mới: OL8/9; PostgreSQL cùng major version với DB01 (cần kiểm tra). Patroni + etcd 3.5.
 - Khuyến nghị kèm theo: **bật vSphere HA cho A-App Cluster** (R-017), vì App và DB đang ở trên cluster này.
 
-## 3.8 Ràng buộc mới (chủ vault, 2026-11-24): Duy Tân không dựng thêm được DB; chỉ dùng SAN, không dùng local disk
+## 3.8 Ràng buộc mới (Đăng, 2026-11-24): Duy Tân không dựng thêm được DB; chỉ dùng SAN, không dùng local disk
 Bố trí A ở mục 3.7 bị loại (DB02 không đặt ở Duy Tân được). **Hai node DB mới bắt buộc đặt ở PVB.** Vì vậy etcd có đa số ở PVB, và nếu không xử lý thì đứt kênh sẽ làm primary ở Duy Tân tự demote.
 
 **Phương án C, khuyến nghị nếu giữ site chính ở Duy Tân: dùng witness etcd ở VDC**
@@ -189,7 +189,7 @@ Bố trí A ở mục 3.7 bị loại (DB02 không đặt ở Duy Tân được)
 **Gợi ý:** giai đoạn đầu chạy **C** (ít thay đổi, giữ App/DB01 ở Duy Tân). Lập lộ trình chuyển sang **D** (switchover có kế hoạch bằng `patronictl switchover`, gần như không mất dữ liệu) khi đã có kênh Metro hoặc khi hạ tầng Duy Tân cần refresh.
 
 ## 4. Việc cần làm để chốt (read-only trước)
-1. **Đo độ trễ thực tế giữa 2 site:** từ 1 VM ở Duy Tân chạy ping / traceroute tới 1 IP ở PVB (ví dụ 10.199.110.10), xem đường đi có vòng qua VDC không. Trên FHN1.R1 / FHN2.R1: `show crypto session`, `show ip route 10.199.0.0` (chủ vault tự đăng nhập).
+1. **Đo độ trễ thực tế giữa 2 site:** từ 1 VM ở Duy Tân chạy ping / traceroute tới 1 IP ở PVB (ví dụ 10.199.110.10), xem đường đi có vòng qua VDC không. Trên FHN1.R1 / FHN2.R1: `show crypto session`, `show ip route 10.199.0.0` (Đăng tự đăng nhập).
 2. **Tài nguyên** (câu hỏi gửi anh QuangBA): đọc vCenter 10.179.110.10 và 10.199.110.10 ở chế độ read-only (free CPU / RAM / datastore, N+1), giống cách đã làm cho VDC.
 3. **Hồ sơ traffic từ dev (anh Thanh):** số truy vấn trên mỗi giao dịch, peak TPS, kích thước DB, có báo cáo hoặc ETL không, có cần HA không và RPO / RTO.
 4. **Chi phí MetroNet hiện có** (câu hỏi của anh Thanh): không có trong vault. Cần lấy hợp đồng hoặc hóa đơn các kênh Metro hiện tại (TPBank / Vinacis / MBAL / HDSS / VietinBank...) để so với báo giá 16 triệu/tháng cho 100M.
@@ -197,7 +197,7 @@ Bố trí A ở mục 3.7 bị loại (DB02 không đặt ở Duy Tân được)
 
 ## 5. Brief phương án trên Claude Docs (2026-11-24, Claude chat)
 - Brief: https://claude.ai/artifact/641DB2hBczxN1ct7YZQAhg ("Brief: Phương án HA 2 site cho VTB uCRM v5").
-- ⚠️ Brief được viết **trước khi** chủ vault chốt "site chính = Duy Tân" (§3.7). Brief giả định **primary ở PVB**, nên khuyến nghị của brief (PA2: primary cluster 2 node + 3 etcd ở PVB, standby cluster DB01 ở Duy Tân, DR = `patronictl promote-cluster`) tương ứng với **phương án D** ở §3.8. PA1 của brief (1 cluster, etcd 2 PVB + 1 Duy Tân, primary PVB) cũng là primary ở PVB. Brief **chưa có phương án C** (witness etcd ở VDC). Cần cập nhật brief nếu giữ site chính ở Duy Tân.
+- ⚠️ Brief được viết **trước khi** Đăng chốt "site chính = Duy Tân" (§3.7). Brief giả định **primary ở PVB**, nên khuyến nghị của brief (PA2: primary cluster 2 node + 3 etcd ở PVB, standby cluster DB01 ở Duy Tân, DR = `patronictl promote-cluster`) tương ứng với **phương án D** ở §3.8. PA1 của brief (1 cluster, etcd 2 PVB + 1 Duy Tân, primary PVB) cũng là primary ở PVB. Brief **chưa có phương án C** (witness etcd ở VDC). Cần cập nhật brief nếu giữ site chính ở Duy Tân.
 - Điểm của brief vẫn dùng được cho mọi phương án:
   - Sizing tham chiếu từ CRM v4 ([[_VTB-CRMv4-DB]]): nếu v5 tăng như v4 (~1.2–1.5 GiB/ngày) thì 600 GB/node không đủ cho 12 tháng → ~1 TB/node; tách disk data/WAL khỏi `/`.
   - DB01 chạy OL7 (glibc 2.17), node mới OL8/9 (glibc 2.28) → collation khác; physical replication trộn OS có nguy cơ hỏng index text. Dựng DB01 lại cùng OS, hoặc chuyển dữ liệu bằng dump/restore / logical replication rồi REINDEX.
@@ -209,5 +209,5 @@ Bố trí A ở mục 3.7 bị loại (DB02 không đặt ở Duy Tân được)
 - **Sửa VLAN:** VTB ở Duy Tân là **VLAN 290 (PCCE3-DB 172.31.90.0/24)** và **VLAN 285 (PCCE3-uCRM 172.31.185.0/24)**, gateway trên FortiGate External-Primary. Các chỗ trước ghi "VLAN 90/185" là nhầm sang dải BaseBS 10.179.x.
 - **PVB:** subnet mới **VLAN 291 – 172.31.91.0/24**, gateway 172.31.91.1 trên FHN02-FW01; DB02 .102, DB03 .103.
 - **Transit Metro:** 10.179.254.0/30 trên routed port ExtSW (FHN1 Gi1/0/20 .1 ↔ FHN2 Gi1/0/21 .2); route: FortiGate → ExtSW (.20.234) → transit. ExtSW PVB không có default route nên cần route riêng 172.31.91.0/24 → 10.199.20.123. Chi tiết: [[FHN02]] mục Network live.
-- **Quyết định chủ vault:** DB01 **giữ nguyên** (không dựng lại); OS node mới chốt theo collation của DB01 (`en_US.UTF-8` → OL7 như DB01; `C` → OL8/9). Disk DB **giữ 600 GB/node**. Tốc độ tăng dùng để sizing: **1.70 GiB/ngày** (trung bình growth trend 35 ngày của v4, chủ vault chốt) → chạm 80% khoảng 06/2027, đầy khoảng 08/2027; mở rộng online trước 05/2027. Dùng dải transit mới, **không dùng lại 10.179.255.4/30**.
-- **Phát hiện:** cả 2 cụm FortiGate tắt session pickup (R-023); FortiGate FHN1 chưa reboot từ 12/2018 (R-024); FHN1 và FHN2 cùng nằm trong segment Metro FPT của HDSS 192.168.100.48/29 → có thể đo RTT thật giữa 2 site (cần chủ vault đồng ý).
+- **Quyết định Đăng:** DB01 **giữ nguyên** (không dựng lại); OS node mới chốt theo collation của DB01 (`en_US.UTF-8` → OL7 như DB01; `C` → OL8/9). Disk DB **giữ 600 GB/node**. Tốc độ tăng dùng để sizing: **1.70 GiB/ngày** (trung bình growth trend 35 ngày của v4, Đăng chốt) → chạm 80% khoảng 06/2027, đầy khoảng 08/2027; mở rộng online trước 05/2027. Dùng dải transit mới, **không dùng lại 10.179.255.4/30**.
+- **Phát hiện:** cả 2 cụm FortiGate tắt session pickup (R-023); FortiGate FHN1 chưa reboot từ 12/2018 (R-024); FHN1 và FHN2 cùng nằm trong segment Metro FPT của HDSS 192.168.100.48/29 → có thể đo RTT thật giữa 2 site (cần Đăng đồng ý).

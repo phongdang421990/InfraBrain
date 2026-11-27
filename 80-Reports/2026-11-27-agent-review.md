@@ -6,7 +6,7 @@ tags: [report, agents, review]
 ---
 # Review đội agent và phân bổ công việc: 2026-11-27
 
-Nguồn: toàn bộ vault (50-Changes, 40-Incidents, 70-Designs, 80-Reports, 10-Systems, 95-Agent-Logs) và các chủ đề chủ vault đã trao đổi với Claude.
+Nguồn: toàn bộ vault (50-Changes, 40-Incidents, 70-Designs, 80-Reports, 10-Systems, 95-Agent-Logs) và các chủ đề Đăng đã trao đổi với Claude.
 
 ## 1. Công việc đang handle
 
@@ -50,7 +50,7 @@ Nguồn: toàn bộ vault (50-Changes, 40-Incidents, 70-Designs, 80-Reports, 10-
 
 Nhật ký: `95-Agent-Logs` mới có từ 27/11, nên chỉ `cc-echo` có dòng nhật ký; các task trước đó chưa được ghi vào nhật ký.
 
-## 3. Đề xuất (chờ chủ vault quyết)
+## 3. Đề xuất (chờ Đăng quyết)
 | Ưu tiên | Đề xuất | Lý do | Nhận task |
 |---|---|---|---|
 | P1 | **Thêm `app-ops`**: deploy/upgrade ứng dụng trên Linux (AICC, UCRM, Web portal, Connect247), systemd, Node/.NET, Nginx, GitLab CI | B11, B12 lặp lại theo cùng một khuôn CR; hiện không có agent đúng vai | B11, B12, các release sau |
@@ -63,6 +63,6 @@ Nhật ký: `95-Agent-Logs` mới có từ 27/11, nên chỉ `cc-echo` có dòng
 Việc kèm theo nếu duyệt: tạo file agent trong `_setup/claude/agents/`, chạy lại `Install-AgentTeam.ps1`, cập nhật bảng routing trong `CLAUDE.md` và skill `infrabrain-dispatch`, ghi bù nhật ký cho các task B1–B12.
 
 ## 4. Quyết định (2026-11-27)
-- Chủ vault **DUYỆT**. Đã áp dụng P1, P2: thêm `app-ops` (skill `app-release`), `db-keeper` (skill `postgres-ops`), `pm-planner`; thu hẹp `cc-echo`; bổ sung phần phối hợp cho `si-architect`; bảng routing mới trong `CLAUDE.md`; ghi bù nhật ký B1–B12; khung vault `_setup/DJBrain-template`.
+- Đăng **DUYỆT**. Đã áp dụng P1, P2: thêm `app-ops` (skill `app-release`), `db-keeper` (skill `postgres-ops`), `pm-planner`; thu hẹp `cc-echo`; bổ sung phần phối hợp cho `si-architect`; bảng routing mới trong `CLAUDE.md`; ghi bù nhật ký B1–B12; khung vault `_setup/DJBrain-template`.
 - P3 (`sec-guard`) chưa tạo — theo điều kiện của chính đề xuất (khi khối việc security tăng).
-- Còn chờ chủ vault: chạy lại `Install-AgentTeam.ps1`; chuyển `DJBrain-template` ra `Documents\DJBrain`; lưu bản cập nhật skill `infrabrain-dispatch`.
+- Còn chờ Đăng: chạy lại `Install-AgentTeam.ps1`; chuyển `DJBrain-template` ra `Documents\DJBrain`; lưu bản cập nhật skill `infrabrain-dispatch`.

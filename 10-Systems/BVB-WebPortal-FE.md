@@ -20,7 +20,7 @@ Web portal khách hàng [[BVBank]] (Ngân hàng Bản Việt): trang portal + tr
 | `feportal-admin.service` | `/portal/feportal-admin` | 8003 | `/bvbank-setting` | `https://test.basebs.cloud/bvbank-setting` |
 - Chạy root, Node `/usr/local/node-v22.23.2-linux-x64` (shell mặc định là v20.9.0 — build phải đổi PATH), `node server.js` HTTPS với `/cert/prod.crt|key`.
 - BE: `test.basebs.cloud/bvbank-portal/portal-api`, `.../bvbank-setting/api`. Cấu hình nội dung đọc từ CRM (tenant + object `obj_configuration_bvb_portal_01`).
-- Đăng nhập: user thường có sudo (không SSH root). Nguồn: chủ vault xác nhận 2026-11-26.
+- Đăng nhập: user thường có sudo (không SSH root). Nguồn: Đăng xác nhận 2026-11-26.
 - Bằng chứng labtest = máy này: Kha báo "up xong check labtest" 12/11 15:25 trùng giờ start `feportal`.
 
 ## Lịch sử deploy
