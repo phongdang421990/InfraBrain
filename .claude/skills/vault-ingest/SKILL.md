@@ -17,7 +17,7 @@ description: Nạp tài liệu thô (Excel/CSV bàn giao, Word, PDF, email, ghi 
 4. Mâu thuẫn giữa nguồn → ghi cả hai giá trị và nguồn vào mục "Cần xác minh", thêm vào `80-Reports/open-questions.md`.
 5. Che mọi secret trước khi ghi (password, PSK, community, token).
 6. Chuyển file gốc sang `90-Raw/ingested/YYYY-MM-DD/`.
-7. Báo lại: số note tạo mới/cập nhật, số mâu thuẫn, 5 câu hỏi quan trọng nhất cần chủ vault trả lời.
+7. Báo lại: số note tạo mới/cập nhật, số mâu thuẫn, 5 câu hỏi quan trọng nhất cần Đăng trả lời.
 
 ## Đặt tên note
 - Hệ thống: `10-Systems/<site>-<hostname>.md` (vd `FDC-PCCE1-RGR-A.md`)

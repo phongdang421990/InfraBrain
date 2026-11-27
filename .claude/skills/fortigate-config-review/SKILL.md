@@ -15,7 +15,7 @@ Trước khi phân tích: che `set password ENC ...`, `set psksecret ENC ...`, `
 - Policy có `set status disable` lâu ngày → dọn
 - Policy bị shadow (policy phía trên đã bao trùm) → 🟡
 - Thiếu `set logtraffic all` trên policy WAN→LAN → 🟡
-- Policy không có comment/không rõ mục đích → hỏi chủ vault
+- Policy không có comment/không rõ mục đích → hỏi Đăng
 
 **VIP / NAT**
 - VIP publish port quản trị (22, 23, 3389, 443 admin, 8443, 1433, 5432) ra Internet → 🔴

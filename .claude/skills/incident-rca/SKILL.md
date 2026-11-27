@@ -5,7 +5,7 @@ description: Quy trình điều tra sự cố production và viết RCA — thu 
 
 # Incident & RCA
 
-## 1. Khung sự cố (hỏi chủ vault nếu chưa có)
+## 1. Khung sự cố (hỏi Đăng nếu chưa có)
 - Triệu chứng người dùng thấy, thời điểm bắt đầu/kết thúc, phạm vi (khách hàng, dịch vụ, site).
 - Thay đổi gần nhất (change, patch, mất điện, đứt link).
 
