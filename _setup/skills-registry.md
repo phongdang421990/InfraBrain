@@ -26,3 +26,8 @@ Bản clone gốc: `D:\skills-lab\mattpocock-skills` (máy devmasterpc). Cập n
 | Plugin | Scope | Trạng thái trong vault này |
 |---|---|---|
 | agent-skills@addy-agent-skills | user | Tắt (`enabledPlugins` trong settings.json) — bộ skill dev, không hợp việc infra |
+
+## Sửa đổi so với upstream
+
+- 2026-11-28: thêm cụm từ kích hoạt tiếng Việt vào `description` của research, grilling, writing-for-agents (giữ nguyên phần tiếng Anh). Khi cập nhật upstream phải giữ lại phần "Tiếng Việt — ...".
+- 2026-11-28: handoff viết lại để lưu vào `95-Agent-Logs/handoffs/` (xem bảng trên).
